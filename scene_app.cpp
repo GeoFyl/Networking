@@ -5,6 +5,8 @@
 #include <system/debug_log.h>
 #include <graphics/renderer_3d.h>
 #include <maths/math_utils.h>
+#include <input/input_manager.h>
+
 
 SceneApp::SceneApp(gef::Platform& platform) :
 	Application(platform),
@@ -17,6 +19,8 @@ SceneApp::SceneApp(gef::Platform& platform) :
 
 void SceneApp::Init()
 {
+	input_ = gef::InputManager::Create(platform_);
+
 	sprite_renderer_ = gef::SpriteRenderer::Create(platform_);
 
 	// create the renderer for draw 3D geometry
@@ -25,8 +29,16 @@ void SceneApp::Init()
 	// initialise primitive builder to make create some 3D geometry easier
 	primitive_builder_ = new PrimitiveBuilder(platform_);
 
+	// initialise box2d world
+	b2_world_ = new b2World(b2Vec2(0.f, -9.8f));
+
 	// setup the mesh for the player
 	player_.set_mesh(primitive_builder_->GetDefaultCubeMesh());
+	player_.InitBox2d(0.5f, 0.5f, 0, 0, b2_world_);
+
+	block_.set_mesh(primitive_builder_->CreateBoxMesh(gef::Vector4(5.f, 0.5f, 0.5f)));
+	block_.InitBox2d(5.f, 0.5f, 0, -2.f, b2_world_);
+	block_.GetBody()->SetType(b2_staticBody);
 
 	InitFont();
 	SetupLights();
@@ -44,15 +56,23 @@ void SceneApp::CleanUp()
 
 	delete sprite_renderer_;
 	sprite_renderer_ = NULL;
+
+	delete b2_world_;
+	b2_world_ = NULL;
 }
 
 bool SceneApp::Update(float frame_time)
 {
-	fps_ = 1.0f / frame_time;
+	input_->Update();
 
-	gef::Matrix44 player_transform;
-	player_transform.SetIdentity();
-	player_.set_transform(player_transform);
+	fps_ = 1.0f / frame_time;
+	b2_world_->Step(1.f / 60.f, 6, 2);
+
+	if (input_->keyboard()->IsKeyPressed(gef::Keyboard::KC_X)) {
+		player_.GetBody()->ApplyLinearImpulse(b2Vec2(0, 1.f), b2Vec2(0.5f, 0), true);
+	}
+	player_.UpdateBox2d();
+
 
 	return true;
 }
@@ -82,6 +102,8 @@ void SceneApp::Render()
 
 	renderer_3d_->set_override_material(&primitive_builder_->red_material());
 	renderer_3d_->DrawMesh(player_);
+	renderer_3d_->set_override_material(&primitive_builder_->blue_material());
+	renderer_3d_->DrawMesh(block_);
 	renderer_3d_->set_override_material(NULL);
 
 	renderer_3d_->End();
