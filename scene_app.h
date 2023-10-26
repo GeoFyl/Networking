@@ -1,13 +1,16 @@
 #ifndef _SCENE_APP_H
 #define _SCENE_APP_H
 
+#include <Windows.h>
 #include <system/application.h>
 #include <maths/vector2.h>
 #include "primitive_builder.h"
 #include <graphics/mesh_instance.h>
-#include <box2d/box2d.h>
 #include "GameObject.h"
 #include <input/keyboard.h>
+#include <PxPhysicsAPI.h>
+#include <string>
+# include <functional>
 
 // FRAMEWORK FORWARD DECLARATIONS
 namespace gef
@@ -32,6 +35,12 @@ private:
 	void CleanUpFont();
 	void DrawHUD();
 	void SetupLights();
+	void initPhysics();
+	void textToChat();
+
+	/*std::function<ImGuiTextEditCallbackData()> test = [&](ImGuiTextEditCallbackData* testData) {
+		chatString_ = "hello";
+	};*/
 
 	gef::InputManager* input_;
     
@@ -41,10 +50,21 @@ private:
 
 	PrimitiveBuilder* primitive_builder_;
 
+	//gef::Platform* platform_;
+
 	GameObject player_;
+	GameObject ground_;
 	GameObject block_;
 
-	b2World* b2_world_;
+	physx::PxDefaultAllocator		gAllocator;
+	physx::PxDefaultErrorCallback	gErrorCallback;
+	physx::PxFoundation* gFoundation = NULL;
+	physx::PxPhysics* gPhysics = NULL;
+	physx::PxDefaultCpuDispatcher* gDispatcher = NULL;
+	physx::PxScene* gScene = NULL;
+
+	char ChatBuff_[100] = "";
+	std::string chatString_ = "";
 
 	float fps_;
 };

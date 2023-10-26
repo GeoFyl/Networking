@@ -130,15 +130,16 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;..\..;..\..\..\gef_abertay;..\..\..\Box2D\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vs2017\include\imGUI;include;.;..\..;..\..\..\gef_abertay</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>
       </DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>box2d.lib;gef.lib;libpng.lib;zlib.lib;gef_d3d11.lib;gef_win32.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;dxguid.lib;dinput8.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../build/vs2017/$(Platform)/$(Configuration)/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gef.lib;libpng.lib;zlib.lib;gef_d3d11.lib;gef_win32.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;dxguid.lib;dinput8.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;PhysXCommon_64.lib;PhysX_64.lib;PhysXFoundation_64.lib;PhysXExtensions_static_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>lib;../../build/vs2017/$(Platform)/$(Configuration)/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -222,11 +223,24 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="include\imGUI\imgui.cpp" />
+    <ClCompile Include="include\imGUI\imgui_demo.cpp" />
+    <ClCompile Include="include\imGUI\imgui_draw.cpp" />
+    <ClCompile Include="include\imGUI\imgui_impl_dx11.cpp" />
+    <ClCompile Include="include\imGUI\imgui_impl_win32.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\primitive_builder.h" />
     <ClInclude Include="..\..\scene_app.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="include\imGUI\imconfig.h" />
+    <ClInclude Include="include\imGUI\imgui.h" />
+    <ClInclude Include="include\imGUI\imgui_impl_dx11.h" />
+    <ClInclude Include="include\imGUI\imgui_impl_win32.h" />
+    <ClInclude Include="include\imGUI\imgui_internal.h" />
+    <ClInclude Include="include\imGUI\stb_rect_pack.h" />
+    <ClInclude Include="include\imGUI\stb_textedit.h" />
+    <ClInclude Include="include\imGUI\stb_truetype.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
